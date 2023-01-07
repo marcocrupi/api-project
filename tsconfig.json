@@ -1,7 +1,8 @@
 {
     "extends": "@tsconfig/node18/tsconfig.json",
     "compilerOptions": {
-        "outDir": "./dist"
+        "outDir": "./dist",
+        "sourceMap": true
     },
     // Il codice "include": ["./src/**/*.ts"] indica che il file tsconfig.js include tutti i file con estensione .ts che si trovano nella directory "src" e in tutte le sue sottodirectory.
     // "include" è una proprietà del file tsconfig.js che viene utilizzata per specificare quali file TypeScript devono essere inclusi nella compilazione.
