@@ -33,6 +33,7 @@ import {
     planetSchema,
     PlanetData,
 } from "./lib/validation";
+import { nextTick } from "process";
 
 const app = express();
 
@@ -48,6 +49,25 @@ app.get("/planets", async (request, response) => {
 
     // Mandiamo l'array di pianeti in una risposta json
     response.json(planets);
+});
+
+// Il carattere "\d" rappresenta un carattere di cifra,
+// mentre il simbolo "+" indica che ci devono essere almeno
+// uno o più caratteri di cifra dopo il carattere "\d".
+// In questo caso, "\d+" indica che la route accetterà solo una stringa
+// di uno o più caratteri numerici dopo l'URL "/planets/".
+app.get("/planets/:id(\\d+)", async (request, response, next) => {
+    const planetId = Number(request.params.id);
+    const planet = await prisma.planet.findUnique({
+        where: { id: planetId },
+    });
+
+    if (!planet) {
+        response.status(404);
+        return next(`Cannot GET /planets/${planetId}`);
+    }
+
+    response.json(planet);
 });
 
 // Installiamo il pacchetto TypeBox @sinclair/typebox
