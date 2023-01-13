@@ -47,9 +47,13 @@ describe("GET /planets", () => {
 describe("POST /planets", () => {
     test("Valid request", async () => {
         const planet = {
+            id: 1,
             name: "Mercury",
+            description: null,
             diameter: 1234,
             moons: 12,
+            CreatedAt: "2023-01-10T08:20:41.068Z",
+            updatedAt: "2023-01-10T08:20:55.985Z",
         };
 
         //@ts-ignore
@@ -57,7 +61,11 @@ describe("POST /planets", () => {
 
         const response = await request
             .post("/planets")
-            .send(planet)
+            .send({
+                name: "Mercury",
+                diameter: 1234,
+                moons: 12,
+            })
             .expect(201)
             .expect("Content-Type", /application\/json/);
 
