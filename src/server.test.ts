@@ -29,6 +29,11 @@ describe("GET /planets", () => {
 
         //@ts-ignore
         prismaMock.planet.findMany.mockResolvedValue(planets);
+        // Il commento @ts-ignore serve per ignorare un errore di tipo del compilatore TypeScript
+        // Questo codice ci permette di creare un mock della funzione findMany
+        // dell'oggetto prismaMock.planet per poter testare una funzione o un modulo che
+        // utilizza questa funzione senza dover utilizzare un database vero durante i test.
+        // Inoltre specifica un valore predefinito come risposta quando questa funzione viene chiamata.
 
         const response = await request
             .get("/planets")
@@ -46,6 +51,9 @@ describe("POST /planets", () => {
             diameter: 1234,
             moons: 12,
         };
+
+        //@ts-ignore
+        prismaMock.planet.create.mockResolvedValue(planet);
 
         const response = await request
             .post("/planets")

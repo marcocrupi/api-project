@@ -2,6 +2,8 @@ module.exports = {
     preset: "ts-jest",
     testEnvironment: "node",
     verbose: true,
+
+    // Settings aggiunti per jest-mock-extended
     clearMocks: true,
-    setupFileAfterEnv: [".src/lib/prisma/client.mock.ts"],
+    setupFilesAfterEnv: ["./src/lib/prisma/client.mock.ts"],
 };
