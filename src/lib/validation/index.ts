@@ -18,7 +18,7 @@ export const validationErrorMiddleware: ErrorRequestHandler = (
 ) => {
     if (error instanceof ValidationError) {
         response.status(422).send({
-            error: error.validationErrors,
+            errors: error.validationErrors,
         });
         next();
     } else {

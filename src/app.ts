@@ -21,6 +21,12 @@ import prisma from "./lib/prisma/client";
 // e precisi, e di registrare e verificare il comportamento delle dipendenze durante i test.
 // npm install --save-dev jest-mock-extended
 
+// Con npm test -- --watch Jest rimarrà in attesa di eventuali cambiamenti nei file di test o
+// nei file dell'applicazione e li rieseguirà automaticamente ogni volta che
+// un cambiamento viene rilevato. Ciò è utile durante lo sviluppo, poiché consente
+// di eseguire automaticamente i test ogni volta che si apportano modifiche al codice,
+// in modo da poter verificare rapidamente se le modifiche causano eventuali errori.
+
 import {
     validate,
     validationErrorMiddleware,
@@ -30,6 +36,9 @@ import {
 
 const app = express();
 
+// In sintesi app.use(express.json()) consente di gestire i dati in formato JSON
+// nella richiesta HTTP, e convertirli in un oggetto javascript accessibile tramite
+// req.body, in modo da poter utilizzare i dati nella richiesta nella logica delle richiesta.
 app.use(express.json());
 
 // Facciamo una richiesta al DB tramite prisma client
@@ -40,6 +49,8 @@ app.get("/planets", async (request, response) => {
     // Mandiamo l'array di pianeti in una risposta json
     response.json(planets);
 });
+
+// Installiamo il pacchetto TypeBox @sinclair/typebox
 
 app.post(
     "/planets",
@@ -55,6 +66,13 @@ app.post(
     }
 );
 
+// Installiamo il pacchetto express-json-validator-middleware
+// è un middleware per Express che consente di verificare che i dati inviati
+//  tramite richieste HTTP siano conformi a uno schema di validazione specifico,
+// aiutando ad evitare problemi di sicurezza e di integrità dei dati
+// all'interno dell'applicazione.
+// Installiamo anche le ajv-formats
+// Digitiamo sul terminale: npm i express-json-validator-middleware ajv-formats
 app.use(validationErrorMiddleware);
 
 export default app;
