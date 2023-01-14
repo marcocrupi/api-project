@@ -106,6 +106,21 @@ app.put(
     }
 );
 
+app.delete("/planets/:id(\\d+)", async (request, response, next) => {
+    const planetId = Number(request.params.id);
+
+    try {
+        await prisma.planet.delete({
+            where: { id: planetId },
+        });
+
+        response.status(204).end();
+    } catch (error) {
+        response.status(404);
+        next(`Cannot DELETE /planets/${planetId}`);
+    }
+});
+
 // Installiamo il pacchetto express-json-validator-middleware
 // è un middleware per Express che consente di verificare che i dati inviati
 //  tramite richieste HTTP siano conformi a uno schema di validazione specifico,
