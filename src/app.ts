@@ -1,5 +1,6 @@
 import express from "express";
 import "express-async-errors";
+import cors from "cors";
 
 // Con prisma possiamo interrogare il database, ovvero richiedere informazioni
 // da un database utilizzando una query SQL (Structured Query Language).
@@ -40,6 +41,12 @@ const app = express();
 // nella richiesta HTTP, e convertirli in un oggetto javascript accessibile tramite
 // req.body, in modo da poter utilizzare i dati nella richiesta nella logica delle richiesta.
 app.use(express.json());
+
+const corsOptions = {
+    origin: "http://localhost:8080",
+};
+
+app.use(cors(corsOptions));
 
 // Facciamo una richiesta al DB tramite prisma client
 app.get("/planets", async (request, response) => {
