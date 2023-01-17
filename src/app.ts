@@ -1,6 +1,7 @@
 import express from "express";
 import "express-async-errors";
 import cors from "cors";
+import { initMulterMiddleware } from "./lib/middleware/multer";
 
 // Con prisma possiamo interrogare il database, ovvero richiedere informazioni
 // da un database utilizzando una query SQL (Structured Query Language).
@@ -41,6 +42,8 @@ const app = express();
 // nella richiesta HTTP, e convertirli in un oggetto javascript accessibile tramite
 // req.body, in modo da poter utilizzare i dati nella richiesta nella logica delle richiesta.
 app.use(express.json());
+
+const upload = initMulterMiddleware();
 
 const corsOptions = {
     origin: "http://localhost:8080",
@@ -127,6 +130,20 @@ app.delete("/planets/:id(\\d+)", async (request, response, next) => {
         next(`Cannot DELETE /planets/${planetId}`);
     }
 });
+
+app.post(
+    "/planets/:id(\\d+/photo)",
+    upload.single("photo"),
+    async (request, response, next) => {
+        // Installiamo multer
+        console.log("request file", request.file);
+
+        if (!request.file) {
+            response.status(400);
+            return next("No photo file uploaded");
+        }
+    }
+);
 
 // Installiamo il pacchetto express-json-validator-middleware
 // è un middleware per Express che consente di verificare che i dati inviati
