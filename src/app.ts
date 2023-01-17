@@ -142,6 +142,9 @@ app.post(
             response.status(400);
             return next("No photo file uploaded");
         }
+
+        const photoFilename = request.file.filename;
+        response.status(201).json({ photoFilename });
     }
 );
 

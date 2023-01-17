@@ -5,5 +5,8 @@ module.exports = {
 
     // Settings aggiunti per jest-mock-extended
     clearMocks: true,
-    setupFilesAfterEnv: ["./src/lib/prisma/client.mock.ts"],
+    setupFilesAfterEnv: [
+        "./src/lib/prisma/client.mock.ts",
+        "./src/lib/middleware/multer.mock.ts",
+    ],
 };
