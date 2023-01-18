@@ -148,6 +148,8 @@ app.post(
     }
 );
 
+// Installiamo il pacchetto mime
+
 // Installiamo il pacchetto express-json-validator-middleware
 // è un middleware per Express che consente di verificare che i dati inviati
 //  tramite richieste HTTP siano conformi a uno schema di validazione specifico,
