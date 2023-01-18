@@ -132,7 +132,7 @@ app.delete("/planets/:id(\\d+)", async (request, response, next) => {
 });
 
 app.post(
-    "/planets/:id(\\d+/photo)",
+    "/planets/:id(\\d+)/photo",
     upload.single("photo"),
     async (request, response, next) => {
         // Installiamo multer
@@ -143,12 +143,28 @@ app.post(
             return next("No photo file uploaded");
         }
 
+        const planetId = Number(request.params.id);
+
         const photoFilename = request.file.filename;
+
+        try {
+            await prisma.planet.update({
+                where: { id: planetId },
+                data: { photoFilename },
+            });
+        } catch (error) {
+            response.status(404);
+            next(`Cannot POST /planets/${planetId}/photo`);
+        }
+
+        // NEL VIDEO ELIMINA QUESTA RIGA MA NON VA ELIMINATA
         response.status(201).json({ photoFilename });
     }
 );
 
 // Installiamo il pacchetto mime
+
+app.use("/planets/photos", express.static("uploads"));
 
 // Installiamo il pacchetto express-json-validator-middleware
 // è un middleware per Express che consente di verificare che i dati inviati
