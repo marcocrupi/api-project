@@ -2,6 +2,7 @@ import supertest from "supertest";
 import app from "./app";
 
 import { prismaMock } from "./lib/prisma/client.mock";
+import { response } from "express";
 
 const request = supertest(app);
 describe("GET /planets", () => {
@@ -262,6 +263,26 @@ describe("POST /planets/:id/photo", () => {
         await request
             .post("/planets/23/photo")
             .attach("photo", "test-fixtures/photos/file.png")
+            .expect(201)
+            .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+    });
+
+    test("Valid request with JPG file upload", async () => {
+        const response = await request
+            .post("/planets/23/photo")
+            .attach("photo", "test-fixtures/photos/file.txt")
+            .expect(500)
+            .expect("Content-Type", /txt\/html/);
+
+        expect(response.text).toContain(
+            "Error: the uploaded file must be a JPG or a PNG"
+        );
+    });
+
+    test("Invalid request with text file upload", async () => {
+        await request
+            .post("/planets/23/photo")
+            .attach("photo", "test-fixtures/photos/file.jpg")
             .expect(201)
             .expect("Access-Control-Allow-Origin", "http://localhost:8080");
     });
