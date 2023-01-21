@@ -6,6 +6,6 @@ import app from "./app";
 
 const port = config.PORT;
 
-app.listen(port, () => {
+router.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
 });
