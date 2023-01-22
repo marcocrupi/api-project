@@ -1,10 +1,11 @@
 import supertest from "supertest";
-import app from "../app";
 
 import { prismaMock } from "../lib/prisma/client.mock";
-import { response } from "express";
+
+import app from "../app";
 
 const request = supertest(app);
+
 describe("GET /planets", () => {
     test("Valid request", async () => {
         const planets = [
@@ -14,8 +15,8 @@ describe("GET /planets", () => {
                 description: null,
                 diameter: 1234,
                 moons: 12,
-                CreatedAt: "2023-01-10T08:20:41.068Z",
-                updatedAt: "2023-01-10T08:20:55.985Z",
+                createdAt: "2022-05-15T11:36:11.162Z",
+                updatedAt: "2022-05-15T11:35:57.603Z",
             },
             {
                 id: 2,
@@ -23,24 +24,20 @@ describe("GET /planets", () => {
                 description: null,
                 diameter: 5678,
                 moons: 2,
-                CreatedAt: "2023-01-10T08:22:23.814Z",
-                updatedAt: "2023-01-10T08:21:51.139Z",
+                createdAt: "2022-05-15T11:36:41.513Z",
+                updatedAt: "2022-05-15T11:36:30.143Z",
             },
         ];
 
-        //@ts-ignore
+        // @ts-ignore
         prismaMock.planet.findMany.mockResolvedValue(planets);
-        // Il commento @ts-ignore serve per ignorare un errore di tipo del compilatore TypeScript
-        // Questo codice ci permette di creare un mock della funzione findMany
-        // dell'oggetto prismaMock.planet per poter testare una funzione o un modulo che
-        // utilizza questa funzione senza dover utilizzare un database vero durante i test.
-        // Inoltre specifica un valore predefinito come risposta quando questa funzione viene chiamata.
 
         const response = await request
             .get("/planets")
             .expect(200)
             .expect("Content-Type", /application\/json/)
-            .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+            .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+            .expect("Access-Control-Allow-Credentials", "true");
 
         expect(response.body).toEqual(planets);
     });
@@ -54,11 +51,11 @@ describe("GET /planet/:id", () => {
             description: null,
             diameter: 1234,
             moons: 12,
-            CreatedAt: "2023-01-10T08:20:41.068Z",
-            updatedAt: "2023-01-10T08:20:55.985Z",
+            createdAt: "2022-05-15T11:36:11.162Z",
+            updatedAt: "2022-05-15T11:35:57.603Z",
         };
 
-        //@ts-ignore
+        // @ts-ignore
         prismaMock.planet.findUnique.mockResolvedValue(planet);
 
         const response = await request
@@ -70,40 +67,40 @@ describe("GET /planet/:id", () => {
     });
 
     test("Planet does not exist", async () => {
-        //@ts-ignore
+        // @ts-ignore
         prismaMock.planet.findUnique.mockResolvedValue(null);
 
         const response = await request
             .get("/planets/23")
             .expect(404)
-            .expect("Content-Type", /text\/html/);
+            .expect("Content-Type", /application\/json/);
 
-        expect(response.text).toContain("Cannot GET /planets/23");
+        expect(response.body.message).toContain("Cannot GET /planets/23");
     });
 
     test("Invalid planet ID", async () => {
         const response = await request
             .get("/planets/asdf")
             .expect(404)
-            .expect("Content-Type", /text\/html/);
+            .expect("Content-Type", /application\/json/);
 
-        expect(response.text).toContain("Cannot GET /planets/asdf");
+        expect(response.body.message).toContain("Cannot GET /planets/asdf");
     });
 });
 
 describe("POST /planets", () => {
     test("Valid request", async () => {
         const planet = {
-            id: 1,
+            id: 3,
             name: "Mercury",
             description: null,
             diameter: 1234,
             moons: 12,
-            CreatedAt: "2023-01-10T08:20:41.068Z",
-            updatedAt: "2023-01-10T08:20:55.985Z",
+            createdAt: "2022-05-15T14:51:23.372Z",
+            updatedAt: "2022-05-15T14:51:23.372Z",
         };
 
-        //@ts-ignore
+        // @ts-ignore
         prismaMock.planet.create.mockResolvedValue(planet);
 
         const response = await request
@@ -115,7 +112,8 @@ describe("POST /planets", () => {
             })
             .expect(201)
             .expect("Content-Type", /application\/json/)
-            .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+            .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+            .expect("Access-Control-Allow-Credentials", "true");
 
         expect(response.body).toEqual(planet);
     });
@@ -143,16 +141,16 @@ describe("POST /planets", () => {
 describe("PUT /planets/:id", () => {
     test("Valid request", async () => {
         const planet = {
-            id: 1,
+            id: 3,
             name: "Mercury",
-            description: null,
+            description: "Lovely planet",
             diameter: 1234,
             moons: 12,
-            CreatedAt: "2023-01-10T08:20:41.068Z",
-            updatedAt: "2023-01-10T08:20:55.985Z",
+            createdAt: "2022-05-15T14:51:23.372Z",
+            updatedAt: "2022-05-15T14:51:23.372Z",
         };
 
-        //@ts-ignore
+        // @ts-ignore
         prismaMock.planet.update.mockResolvedValue(planet);
 
         const response = await request
@@ -165,7 +163,8 @@ describe("PUT /planets/:id", () => {
             })
             .expect(200)
             .expect("Content-Type", /application\/json/)
-            .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+            .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+            .expect("Access-Control-Allow-Credentials", "true");
 
         expect(response.body).toEqual(planet);
     });
@@ -190,7 +189,7 @@ describe("PUT /planets/:id", () => {
     });
 
     test("Planet does not exist", async () => {
-        //@ts-ignore
+        // @ts-ignore
         prismaMock.planet.update.mockRejectedValue(new Error("Error"));
 
         const response = await request
@@ -202,9 +201,9 @@ describe("PUT /planets/:id", () => {
                 moons: 12,
             })
             .expect(404)
-            .expect("Content-Type", /text\/html/);
+            .expect("Content-Type", /application\/json/);
 
-        expect(response.text).toContain("Cannot PUT /planets/23");
+        expect(response.body.message).toContain("Cannot PUT /planets/23");
     });
 
     test("Invalid planet ID", async () => {
@@ -217,74 +216,75 @@ describe("PUT /planets/:id", () => {
                 moons: 12,
             })
             .expect(404)
-            .expect("Content-Type", /text\/html/);
+            .expect("Content-Type", /application\/json/);
 
-        expect(response.text).toContain("Cannot PUT /planets/asdf");
+        expect(response.body.message).toContain("Cannot PUT /planets/asdf");
     });
 });
 
 describe("DELETE /planet/:id", () => {
     test("Valid request", async () => {
-        const response = await request
+        await request
             .delete("/planets/1")
             .expect(204)
-            .expect("Access-Control-Allow-Origin", "http://localhost:8080");
-
-        expect(response.text).toEqual("");
+            .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+            .expect("Access-Control-Allow-Credentials", "true");
     });
 
     test("Planet does not exist", async () => {
-        //@ts-ignore
+        // @ts-ignore
         prismaMock.planet.delete.mockRejectedValue(new Error("Error"));
 
         const response = await request
             .delete("/planets/23")
             .expect(404)
-            .expect("Content-Type", /text\/html/);
+            .expect("Content-Type", /application\/json/);
 
-        expect(response.text).toContain("Cannot DELETE /planets/23");
+        expect(response.body.message).toContain("Cannot DELETE /planets/23");
     });
 
     test("Invalid planet ID", async () => {
         const response = await request
             .delete("/planets/asdf")
             .expect(404)
-            .expect("Content-Type", /text\/html/);
+            .expect("Content-Type", /application\/json/);
 
-        expect(response.text).toContain("Cannot DELETE /planets/asdf");
+        expect(response.body.message).toContain("Cannot DELETE /planets/asdf");
     });
 });
 
-// These tests depend on: ./src/lib/middleware/multer.mock.ts
-// It usese multer.memoryStorage, so no files are written to disk.
-
+/**
+ * These tests depend on: src/lib/middleware/multer.mock.ts
+ * It uses multer.memoryStorage, so no files are written to disk.
+ */
 describe("POST /planets/:id/photo", () => {
     test("Valid request with PNG file upload", async () => {
         await request
             .post("/planets/23/photo")
             .attach("photo", "test-fixtures/photos/file.png")
             .expect(201)
-            .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+            .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+            .expect("Access-Control-Allow-Credentials", "true");
     });
 
     test("Valid request with JPG file upload", async () => {
-        const response = await request
-            .post("/planets/23/photo")
-            .attach("photo", "test-fixtures/photos/file.txt")
-            .expect(500)
-            .expect("Content-Type", /txt\/html/);
-
-        expect(response.text).toContain(
-            "Error: the uploaded file must be a JPG or a PNG"
-        );
-    });
-
-    test("Invalid request with text file upload", async () => {
         await request
             .post("/planets/23/photo")
             .attach("photo", "test-fixtures/photos/file.jpg")
             .expect(201)
             .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+    });
+
+    test("Invalid request with text file upload", async () => {
+        const response = await request
+            .post("/planets/23/photo")
+            .attach("photo", "test-fixtures/photos/file.txt")
+            .expect(500)
+            .expect("Content-Type", /application\/json/);
+
+        expect(response.body.message).toContain(
+            "Error: The uploaded file must be a JPG or a PNG image."
+        );
     });
 
     test("Planet does not exist", async () => {
@@ -295,25 +295,30 @@ describe("POST /planets/:id/photo", () => {
             .post("/planets/23/photo")
             .attach("photo", "test-fixtures/photos/file.png")
             .expect(404)
-            .expect("Content-Type", /text\/html/);
+            .expect("Content-Type", /application\/json/);
 
-        expect(response.text).toContain("Cannot POST /planets/23/photo");
+        expect(response.body.message).toContain(
+            "Cannot POST /planets/23/photo"
+        );
     });
 
     test("Invalid planet ID", async () => {
         const response = await request
             .post("/planets/asdf/photo")
             .expect(404)
-            .expect("Content-Type", /text\/html/);
+            .expect("Content-Type", /application\/json/);
 
-        expect(response.text).toContain("Cannot POST /planets/asdf/photo");
+        expect(response.body.message).toContain(
+            "Cannot POST /planets/asdf/photo"
+        );
     });
+
     test("Invalid request with no file upload", async () => {
         const response = await request
             .post("/planets/23/photo")
             .expect(400)
-            .expect("Content-Type", /text\/html/);
+            .expect("Content-Type", /application\/json/);
 
-        expect(response.text).toContain("No photo file uploaded");
+        expect(response.body.message).toContain("No photo file uploaded.");
     });
 });

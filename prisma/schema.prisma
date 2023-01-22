@@ -11,12 +11,14 @@ datasource db {
 }
 
 model Planet {
-    id                   Int               @id  @default(autoincrement())
-    name                 String            @db.VarChar(255)
-    description          String?
-    diameter             Int
-    moons                Int
-    photoFilename        String?           @db.VarChar(255)
-    CreatedAt            DateTime          @default(now())
-    updatedAt            DateTime          @updatedAt
+    id              Int         @id @default(autoincrement())
+    name            String      @db.VarChar(255)
+    description     String?
+    diameter        Int
+    moons           Int
+    photoFilename   String?     @db.VarChar(255)
+    createdAt       DateTime    @default(now())
+    createdBy       String?     @db.VarChar(255)
+    updatedAt       DateTime    @updatedAt
+    updatedBy       String?     @db.VarChar(255)
 }
